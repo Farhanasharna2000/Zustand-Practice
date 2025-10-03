@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
 export interface Habit {
   id: string;
@@ -15,7 +15,7 @@ interface HabitState {
   toggleHabit: (id: string, date: string) => void;
 }
 const useHabitStore = create<HabitState>()(
-  devtools((set) => {
+  devtools(persist((set) => {
     return {
       habits: [],
       addHabit: (name, frequency) =>
@@ -53,7 +53,10 @@ const useHabitStore = create<HabitState>()(
           ),
         })),
     };
+  },{
+    name:'habits-local',
   })
+)
 );
 
 export default useHabitStore;
