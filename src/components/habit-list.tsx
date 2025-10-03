@@ -4,7 +4,7 @@ import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { CheckCircle, Delete } from "@mui/icons-material";
 
 const HabitList: React.FC = () => {
-  const { habits, removeHabit } = useHabitStore();
+  const { habits, removeHabit, toggleHabit } = useHabitStore();
   const today = new Date().toISOString().split("T")[0];
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 4 }}>
@@ -25,6 +25,7 @@ const HabitList: React.FC = () => {
                     habit.completeDates.includes(today) ? "success" : "primary"
                   }
                   startIcon={<CheckCircle />}
+                   onClick={() => toggleHabit(habit.id,today)}
                 >
                   {habit.completeDates.includes(today)
                     ? "Completed"
