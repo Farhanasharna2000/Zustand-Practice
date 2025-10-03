@@ -1,11 +1,32 @@
 import React from "react";
-import useHabitStore from "../store/store";
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import useHabitStore, { type Habit } from "../store/store";
+import {
+  Box,
+  Button,
+  Grid,
+  LinearProgress,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { CheckCircle, Delete } from "@mui/icons-material";
 
 const HabitList: React.FC = () => {
   const { habits, removeHabit, toggleHabit } = useHabitStore();
   const today = new Date().toISOString().split("T")[0];
+  const getStreak = (habit: Habit) => {
+    let streak = 0;
+    const currentDate = new Date();
+    while (true) {
+      const dateString = currentDate.toISOString().split("T")[0];
+      if (habit.completeDates.includes(dateString)) {
+        streak++;
+        currentDate.setDate(currentDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+    return streak;
+  };
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 4 }}>
       {habits.map((habit) => (
@@ -25,7 +46,7 @@ const HabitList: React.FC = () => {
                     habit.completeDates.includes(today) ? "success" : "primary"
                   }
                   startIcon={<CheckCircle />}
-                   onClick={() => toggleHabit(habit.id,today)}
+                  onClick={() => toggleHabit(habit.id, today)}
                 >
                   {habit.completeDates.includes(today)
                     ? "Completed"
@@ -42,6 +63,10 @@ const HabitList: React.FC = () => {
               </Box>
             </Grid>
           </Grid>
+          <Box sx={{ mt: 2 }}>
+            <Typography>Current Streak: {getStreak(habit)}</Typography>
+            <LinearProgress variant="determinate" value={(getStreak(habit)/30)*100} sx={{mt:1}}/>
+          </Box>
         </Paper>
       ))}
     </Box>
