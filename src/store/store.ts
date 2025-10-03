@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 export interface Habit {
   id: string;
@@ -11,7 +12,7 @@ interface HabitState {
   habits: Habit[];
   addHabit: (name: string, frequency: "daily" | "weekly") => void;
 }
-const useHabitStore = create<HabitState>()((set) => {
+const useHabitStore = create<HabitState>()(devtools((set) => {
   return {
     habits: [],
     addHabit: (name, frequency) =>
@@ -29,6 +30,6 @@ const useHabitStore = create<HabitState>()((set) => {
         };
       }),
   };
-});
+}));
 
 export default useHabitStore;
